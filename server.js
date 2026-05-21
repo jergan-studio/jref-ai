@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import axios from "axios";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const axios = require("axios");
 
 dotenv.config();
 
@@ -20,17 +20,9 @@ app.post("/api/ai", async (req, res) => {
       {
         model: "llama3-70b-8192",
         messages: [
-          {
-            role: "system",
-            content:
-              "You are JREF AI, a fast assistant inside a search engine. Keep answers short, useful, and easy to read."
-          },
-          {
-            role: "user",
-            content: message
-          }
-        ],
-        temperature: 0.7
+          { role: "system", content: "You are JREF AI." },
+          { role: "user", content: message }
+        ]
       },
       {
         headers: {
@@ -45,9 +37,7 @@ app.post("/api/ai", async (req, res) => {
     });
 
   } catch (err) {
-    res.json({
-      reply: "AI error: " + err.message
-    });
+    res.json({ reply: "AI error: " + err.message });
   }
 });
 
