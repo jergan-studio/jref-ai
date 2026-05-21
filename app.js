@@ -1,8 +1,10 @@
 async function askAI() {
-  const input = document.getElementById("input").value;
+  const query = document.getElementById("input").value.trim();
   const output = document.getElementById("output");
 
-  output.innerHTML = "Thinking...";
+  if (!query) return;
+
+  output.innerHTML = "Searching AI...";
 
   const API_KEY = "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";
 
@@ -14,17 +16,24 @@ async function askAI() {
         "Authorization": `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
-        model: "llama3-70b-8192",
+        model: "llama-3.1-8b-instant",
         messages: [
-          { role: "system", content: "You are JREF AI." },
-          { role: "user", content: input }
+          {
+            role: "system",
+            content:
+              "You are JREF AI, a search engine assistant. Always respond like search results. Be short, structured, and useful."
+          },
+          {
+            role: "user",
+            content: `Search query: ${query}`
+          }
         ]
       })
     });
 
     const data = await res.json();
 
-    console.log("GROQ RESPONSE:", data); // 👈 IMPORTANT
+    console.log("GROQ:", data);
 
     if (!res.ok) {
       output.innerHTML = "API ERROR: " + JSON.stringify(data);
@@ -33,7 +42,7 @@ async function askAI() {
 
     const reply = data?.choices?.[0]?.message?.content;
 
-    output.innerHTML = reply || "No AI reply found.";
+    output.innerHTML = reply || "No result found.";
 
   } catch (err) {
     output.innerHTML = "Fetch error: " + err.message;
