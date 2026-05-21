@@ -4,7 +4,7 @@ async function askAI() {
 
   output.innerHTML = "Thinking...";
 
-  const API_KEY = "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"; // ⚠️ exposed on GitHub Pages
+  const API_KEY = "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";
 
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -16,24 +16,26 @@ async function askAI() {
       body: JSON.stringify({
         model: "llama3-70b-8192",
         messages: [
-          {
-            role: "system",
-            content: "You are JREF AI. Keep answers short and useful."
-          },
-          {
-            role: "user",
-            content: input
-          }
+          { role: "system", content: "You are JREF AI." },
+          { role: "user", content: input }
         ]
       })
     });
 
     const data = await res.json();
 
-    output.innerHTML =
-      data.choices?.[0]?.message?.content || "No response from AI.";
+    console.log("GROQ RESPONSE:", data); // 👈 IMPORTANT
+
+    if (!res.ok) {
+      output.innerHTML = "API ERROR: " + JSON.stringify(data);
+      return;
+    }
+
+    const reply = data?.choices?.[0]?.message?.content;
+
+    output.innerHTML = reply || "No AI reply found.";
 
   } catch (err) {
-    output.innerHTML = "AI error: " + err.message;
+    output.innerHTML = "Fetch error: " + err.message;
   }
 }
