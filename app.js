@@ -4,7 +4,7 @@ async function askAI() {
 
   if (!query) return;
 
-  output.innerHTML = "Searching AI...";
+  output.innerHTML = "Searching...";
 
   const API_KEY = "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";
 
@@ -20,20 +20,17 @@ async function askAI() {
         messages: [
           {
             role: "system",
-            content:
-              "You are JREF AI, a search engine assistant. Always respond like search results. Be short, structured, and useful."
+            content: "You are JREF AI. Respond like a search engine: short, structured, useful."
           },
           {
             role: "user",
-            content: `Search query: ${query}`
+            content: query
           }
         ]
       })
     });
 
     const data = await res.json();
-
-    console.log("GROQ:", data);
 
     if (!res.ok) {
       output.innerHTML = "API ERROR: " + JSON.stringify(data);
@@ -42,9 +39,9 @@ async function askAI() {
 
     const reply = data?.choices?.[0]?.message?.content;
 
-    output.innerHTML = reply || "No result found.";
+    output.innerHTML = reply || "No response.";
 
   } catch (err) {
-    output.innerHTML = "Fetch error: " + err.message;
+    output.innerHTML = "Error: " + err.message;
   }
 }
